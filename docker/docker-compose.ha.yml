@@ -1,0 +1,28 @@
+# pg_facets - TimescaleDB HA base image
+# Uses Dockerfile.ha (timescale/timescaledb-ha:pg17.2-ts2.17.2-oss).
+# For pgvector base (default), use docker-compose.yml.
+
+services:
+  pg_facets:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.ha
+    container_name: pg_facets
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-postgres}
+    volumes:
+      - pg_facets_data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pg_facets_data:
+    driver: local

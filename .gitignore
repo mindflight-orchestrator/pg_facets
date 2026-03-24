@@ -1,0 +1,8 @@
+.env
+.zig-cache/
+zig-cache/
+zig-out/
+logs/
+*.log
+.DS_Store
+examples/golang/vendor/

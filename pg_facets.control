@@ -1,0 +1,7 @@
+# pg_facets extension
+comment = 'High-performance faceting using Zig and Roaring Bitmaps with BM25 search'
+default_version = '0.4.3'
+module_pathname = '$libdir/pg_facets'
+relocatable = true
+requires = 'roaringbitmap'
+

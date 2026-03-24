@@ -1,0 +1,97 @@
+# Docker Compose for running pg_facets native tokenization tests
+services:
+  pg_facets_test:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: pg_facets_test
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5434:5432"  # Different port to avoid conflicts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    # Use tmpfs for faster tests (no persistence needed)
+    tmpfs:
+      - /var/lib/postgresql/data
+    # Override command to wait for ready and run tests
+    command: >
+      bash -c "
+        docker-entrypoint.sh postgres &
+        sleep 5 &&
+        until pg_isready -U postgres; do sleep 1; done &&
+        echo 'PostgreSQL is ready' &&
+        tail -f /dev/null
+      "
+
+  test_runner:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.test
+    container_name: pg_facets_test_runner
+    depends_on:
+      pg_facets_test:
+        condition: service_healthy
+    environment:
+      - PGHOST=pg_facets_test
+      - PGPORT=5432
+      - PGUSER=postgres
+      - PGPASSWORD=postgres
+      - PGDATABASE=postgres
+    volumes:
+      - ../test:/tests:ro
+      - ../sql:/sql:ro
+    command: >
+      bash -c "
+        echo 'Waiting for PostgreSQL...' &&
+        until psql -h pg_facets_test -U postgres -d postgres -c 'SELECT 1' > /dev/null 2>&1; do
+          sleep 1
+        done &&
+        echo 'PostgreSQL is ready!' &&
+        echo '' &&
+        echo 'Installing extensions...' &&
+        psql -h pg_facets_test -U postgres -d postgres -c 'CREATE EXTENSION IF NOT EXISTS roaringbitmap' &&
+        psql -h pg_facets_test -U postgres -d postgres -c 'CREATE EXTENSION IF NOT EXISTS dblink' &&
+        psql -h pg_facets_test -U postgres -d postgres -c 'CREATE EXTENSION IF NOT EXISTS pg_facets' &&
+        echo '' &&
+        echo '==============================================' &&
+        echo 'Running Quick Validation Test' &&
+        echo '==============================================' &&
+        psql -h pg_facets_test -U postgres -d postgres -f /tests/sql/quick_native_validation.sql &&
+        echo '' &&
+        echo '==============================================' &&
+        echo 'Running Full Native Tokenization Tests' &&
+        echo '==============================================' &&
+        psql -h pg_facets_test -U postgres -d postgres -f /tests/sql/native_tokenization_test.sql &&
+        echo '' &&
+        echo '==============================================' &&
+        echo 'Running Performance Benchmarks' &&
+        echo '==============================================' &&
+        psql -h pg_facets_test -U postgres -d postgres -f /tests/sql/native_performance_benchmark.sql &&
+        echo '' &&
+        echo '==============================================' &&
+        echo 'Running Memory Safety Tests' &&
+        echo '==============================================' &&
+        psql -h pg_facets_test -U postgres -d postgres -f /tests/sql/memory_safety_test.sql &&
+        psql -h pg_facets_test -U postgres -d postgres -f /tests/sql/critical_memory_safety_test.sql &&
+        echo '' &&
+        echo '==============================================' &&
+        echo 'Running Version 0.4.3 Tests' &&
+        echo '==============================================' &&
+        psql -h pg_facets_test -U postgres -d postgres -f /tests/sql/version_0.4.3_test.sql &&
+        echo '' &&
+        echo '==============================================' &&
+        echo 'Running ACID Compliance Tests' &&
+        echo '==============================================' &&
+        psql -h pg_facets_test -U postgres -d postgres -f /tests/sql/acid_compliance_test.sql &&
+        echo '' &&
+        echo '==============================================' &&
+        echo 'All Tests Complete!' &&
+        echo '=============================================='
+      "
+

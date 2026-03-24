@@ -1,0 +1,60 @@
+Type de catégorie,Catégorie Principale,Catégorie,Sous-catégorie
+Gestion Locative,Gestion Administrative & Contrats,"Documents, Dossiers & Contrats",Contrats de location
+Gestion Locative,Gestion Administrative & Contrats,"Documents, Dossiers & Contrats",États des lieux et inventaires
+Gestion Locative,Gestion Administrative & Contrats,"Documents, Dossiers & Contrats",Diagnostics et rapports techniques
+Gestion Locative,Gestion Administrative & Contrats,"Documents, Dossiers & Contrats",Dossiers Locataires : Créa/Suivi/Clôture
+Gestion Locative,Gestion Administrative & Contrats,"Documents, Dossiers & Contrats",Dossiers Locataires : Candidatures
+Gestion Locative,Gestion Administrative & Contrats,"Documents, Dossiers & Contrats",Baux & Contrats : Signature/Renouvellement
+Gestion Locative,Gestion Administrative & Contrats,"Documents, Dossiers & Contrats",Baux & Contrats : Résiliation
+Gestion Locative,Gestion Administrative & Contrats,"Documents, Dossiers & Contrats",Baux & Contrats : AG Copro
+Gestion Locative,Gestion Administrative & Contrats,"Documents, Dossiers & Contrats",Suivi Administratif : Demandes d’info
+Gestion Locative,Gestion Administrative & Contrats,Communication et Suivi des Locataires,Gestion des contacts et réclamations
+Gestion Locative,Gestion Administrative & Contrats,Communication et Suivi des Locataires,Assistance et service client
+Gestion Locative,Gestion Administrative & Contrats,Communication et Suivi des Locataires,Historique des échanges
+Gestion Locative,"Finances, Comptabilité & Contentieux",Paiement et Transactions,"Encaissement des loyers (virements, prélèvements, chèques)"
+Gestion Locative,"Finances, Comptabilité & Contentieux",Paiement et Transactions,"Suivi des charges locatives (eau, électricité, copropriété)"
+Gestion Locative,"Finances, Comptabilité & Contentieux",Paiement et Transactions,"Paiement Loyer : Suivi Encaissements, Relances"
+Gestion Locative,"Finances, Comptabilité & Contentieux",Facturation,Émission Factures
+Gestion Locative,"Finances, Comptabilité & Contentieux",Facturation,Suivi Transactions
+Gestion Locative,"Finances, Comptabilité & Contentieux","Impayés, Recouvrement et Contentieux",Relances automatiques et manuelles
+Gestion Locative,"Finances, Comptabilité & Contentieux","Impayés, Recouvrement et Contentieux",Suivi des retards de paiement
+Gestion Locative,"Finances, Comptabilité & Contentieux","Impayés, Recouvrement et Contentieux",Procédures de recouvrement
+Gestion Locative,"Finances, Comptabilité & Contentieux","Impayés, Recouvrement et Contentieux",Litiges : Réclamations Clients
+Gestion Locative,"Finances, Comptabilité & Contentieux","Impayés, Recouvrement et Contentieux",Litiges : Litiges Fournisseurs
+Gestion Locative,"Finances, Comptabilité & Contentieux","Impayés, Recouvrement et Contentieux",Recouvrement : Recouvrement Amiable
+Gestion Locative,"Finances, Comptabilité & Contentieux","Impayés, Recouvrement et Contentieux",Recouvrement : Recouvrement Judiciaire
+Gestion Locative,"Finances, Comptabilité & Contentieux","Impayés, Recouvrement et Contentieux",Suivi Juridique : Dossiers Contentieux
+Gestion Locative,"Finances, Comptabilité & Contentieux","Impayés, Recouvrement et Contentieux",Suivi Juridique : Procédures/Médiation
+Gestion Locative,"Finances, Comptabilité & Contentieux",Dépôts et Garanties,Suivi des dépôts de garantie
+Gestion Locative,"Finances, Comptabilité & Contentieux",Dépôts et Garanties,"Gestion des assurances et garanties (loyers impayés, risques divers)"
+Gestion Locative,"Finances, Comptabilité & Contentieux",Comptabilité,Paiement Clients
+Gestion Locative,"Finances, Comptabilité & Contentieux",Comptabilité,Règlement Fournisseurs
+Gestion Locative,"Finances, Comptabilité & Contentieux",Comptabilité,Clôture Mensuelle
+Gestion Locative,"Finances, Comptabilité & Contentieux",Comptabilité,Clôture Annuelle
+Gestion Locative,"Maintenance, Travaux & Interventions",Entretien Courant & Réparations,Nettoyage et petites réparations
+Gestion Locative,"Maintenance, Travaux & Interventions",Entretien Courant & Réparations,"Vérifications périodiques (sécurité, entretien technique)"
+Gestion Locative,"Maintenance, Travaux & Interventions",Entretien Courant & Réparations,"Interventions en plomberie, électricité, chauffage"
+Gestion Locative,"Maintenance, Travaux & Interventions",Entretien Courant & Réparations,Gestion des prestataires et suivi des interventions
+Gestion Locative,"Maintenance, Travaux & Interventions",Entretien Courant & Réparations,Signalement Incident (service et réparations)
+Gestion Locative,"Maintenance, Travaux & Interventions","Devis, Travaux & Rénovations",Modernisation des installations
+Gestion Locative,"Maintenance, Travaux & Interventions","Devis, Travaux & Rénovations",Travaux de mise aux normes et rénovation énergétique
+Gestion Locative,"Maintenance, Travaux & Interventions","Devis, Travaux & Rénovations",Validation Devis
+Gestion Locative,"Maintenance, Travaux & Interventions","Devis, Travaux & Rénovations",Suivi Travaux
+Gestion Locative,Visites & Accompagnement,Organisation des Visites,Planification des visites et accompagnement des locataires
+Gestion Locative,Visites & Accompagnement,Suivi d’Emménagement,État des Lieux
+Gestion Locative,Visites & Accompagnement,Suivi d’Emménagement,Coordination de l’Entrée
+Gestion Locative,Incidents & Problèmes,Signalement et Suivi des Incidents,Réception des réclamations et suivi des correctifs
+Gestion Locative,Spécificités par Type de Bien,Appartements - Caractéristiques Techniques et Réglementaires,"Diagnostics techniques spécifiques (ascenseurs, sécurité incendie)"
+Gestion Locative,Spécificités par Type de Bien,Appartements - Caractéristiques Techniques et Réglementaires,"Règlement de copropriété et espaces communs (couloirs, parkings)"
+Gestion Locative,Spécificités par Type de Bien,Appartements - Entretien Spécifique,"Maintenance des équipements partagés (ascenseur, interphone)"
+Gestion Locative,Spécificités par Type de Bien,Appartements - Entretien Spécifique,Gestion des espaces communs et parties extérieures
+Gestion Locative,Spécificités par Type de Bien,Maisons - Caractéristiques Techniques et Structurelles,"Diagnostics structurels (toiture, isolation, fondations)"
+Gestion Locative,Spécificités par Type de Bien,Maisons - Caractéristiques Techniques et Structurelles,"État général et suivi des annexes (garage, dépendances)"
+Gestion Locative,Spécificités par Type de Bien,Maisons - Entretien Spécifique,"Travaux sur espaces extérieurs (jardin, terrasse, piscine)"
+Gestion Locative,Spécificités par Type de Bien,Maisons - Entretien Spécifique,"Suivi des systèmes individuels (chauffage, électricité, plomberie)"
+Gestion Locative,Support et Services Complémentaires,Assurances et Garanties Complémentaires,Assurance habitation pour le propriétaire
+Gestion Locative,Support et Services Complémentaires,Assurances et Garanties Complémentaires,Garanties contre les loyers impayés et autres sinistres
+Gestion Locative,Support et Services Complémentaires,Assistance Juridique et Conseils Fiscaux,Support en cas de litiges et contentieux
+Gestion Locative,Support et Services Complémentaires,Assistance Juridique et Conseils Fiscaux,Conseils et accompagnement pour les déclarations fiscales
+Gestion Locative,Support et Services Complémentaires,Outils et Interfaces Numériques,Plateformes de gestion en ligne et applications mobiles
+Gestion Locative,Support et Services Complémentaires,Outils et Interfaces Numériques,"Reporting, tableaux de bord et automatisation des tâches"

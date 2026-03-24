@@ -1,0 +1,149 @@
+# Dockerfile.postgres
+# Builds PostgreSQL 17 with pgvector, roaringbitmap, pg_facets (0.4.0), pg_trgm, and pg_cron.
+
+# ---------------------------
+# Stage 1: Builder Stage
+# ---------------------------
+FROM ubuntu:22.04 AS builder
+
+# Environment variables
+ENV DEBIAN_FRONTEND=noninteractive \
+    PG_MAJOR=17 \
+    ZIG_VERSION=0.15.2 \
+    PG_CRON_VERSION=v1.6.5
+
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        curl \
+        ca-certificates \
+        gnupg2 \
+        git \
+        openssh-client \
+        cmake \
+        gcc \
+        libc-dev \
+        make \
+        pkg-config \
+        libssl-dev \
+        wget \
+        xz-utils && \
+    rm -rf /var/lib/apt/lists/*
+
+# Add PostgreSQL Apt repository and install PostgreSQL development packages
+RUN curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+    echo "deb http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        postgresql-server-dev-$PG_MAJOR && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Zig (multi-arch) and lock Zig build target to GNU libc.
+ARG TARGETARCH=amd64
+RUN MACHINE="$(uname -m)" && \
+    case "${MACHINE}" in \
+      aarch64|arm64) RUNTIME_ARCH=arm64;; \
+      x86_64|amd64) RUNTIME_ARCH=amd64;; \
+      *) RUNTIME_ARCH="${TARGETARCH}";; \
+    esac && \
+    if [ "${TARGETARCH}" != "${RUNTIME_ARCH}" ]; then \
+      echo "WARN: TARGETARCH=${TARGETARCH} differs from runtime arch ${RUNTIME_ARCH}; using runtime arch."; \
+    fi && \
+    case "${RUNTIME_ARCH}" in \
+      arm64) ZIG_ARCH=aarch64-linux; ZIG_TARGET=aarch64-linux-gnu;; \
+      *) ZIG_ARCH=x86_64-linux; ZIG_TARGET=x86_64-linux-gnu;; \
+    esac && \
+    printf '%s' "${ZIG_TARGET}" > /tmp/zig_target && \
+    cd /tmp && \
+    wget https://ziglang.org/download/${ZIG_VERSION}/zig-${ZIG_ARCH}-${ZIG_VERSION}.tar.xz && \
+    tar -xf zig-${ZIG_ARCH}-${ZIG_VERSION}.tar.xz && \
+    mv zig-${ZIG_ARCH}-${ZIG_VERSION} /usr/local/zig && \
+    ln -s /usr/local/zig/zig /usr/local/bin/zig && \
+    rm zig-${ZIG_ARCH}-${ZIG_VERSION}.tar.xz
+
+# Build and install pg_cron (requires shared_preload_libraries at runtime)
+RUN cd /tmp && \
+    git clone https://github.com/citusdata/pg_cron.git && \
+    cd pg_cron && \
+    git checkout "${PG_CRON_VERSION}" && \
+    make && \
+    make install
+
+# Build and install roaringbitmap (required by pg_facets)
+COPY deps/pg_roaringbitmap /tmp/pg_roaringbitmap
+RUN cd /tmp/pg_roaringbitmap && \
+    make clean && \
+    make && \
+    make install
+
+# Build pg_facets from the local build context
+WORKDIR /tmp/pg_facets
+COPY src/ ./src/
+COPY sql/ ./sql/
+COPY build.zig ./
+COPY pg_facets.control ./
+COPY deps/pg_roaringbitmap ./deps/pg_roaringbitmap/
+
+RUN ZIG_TARGET="$(tr -d '\n' </tmp/zig_target)" && \
+    zig build -Dtarget="${ZIG_TARGET}" -Doptimize=ReleaseFast
+
+# Verify that required files exist before proceeding
+RUN test -f /tmp/pg_facets/pg_facets.control && \
+    test -f /tmp/pg_facets/sql/pg_facets--0.4.0.sql && \
+    test -f /tmp/pg_facets/zig-out/lib/libpg_facets.so && \
+    echo "All pg_facets files found successfully"
+
+# Switch back to root user if necessary (apt commands run as root)
+USER root
+
+# ---------------------------
+# Stage 2: Final Image
+# ---------------------------
+FROM pgvector/pgvector:pg17
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PG_MAJOR=17
+
+# Ensure contrib is available for pg_trgm (and other contrib extensions)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends postgresql-contrib-$PG_MAJOR && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy built roaringbitmap from builder
+COPY --from=builder /usr/lib/postgresql/$PG_MAJOR/lib/roaringbitmap.so /usr/lib/postgresql/$PG_MAJOR/lib/roaringbitmap.so
+COPY --from=builder /usr/share/postgresql/$PG_MAJOR/extension/roaringbitmap.control /usr/share/postgresql/$PG_MAJOR/extension/roaringbitmap.control
+COPY --from=builder /usr/share/postgresql/$PG_MAJOR/extension/roaringbitmap--*.sql /usr/share/postgresql/$PG_MAJOR/extension/
+
+# Copy built pg_cron from builder
+COPY --from=builder /usr/lib/postgresql/$PG_MAJOR/lib/pg_cron.so /usr/lib/postgresql/$PG_MAJOR/lib/pg_cron.so
+COPY --from=builder /usr/share/postgresql/$PG_MAJOR/extension/pg_cron* /usr/share/postgresql/$PG_MAJOR/extension/
+
+# Copy built pg_facets from builder
+# Copy the shared library
+COPY --from=builder /tmp/pg_facets/zig-out/lib/libpg_facets.so /usr/lib/postgresql/$PG_MAJOR/lib/pg_facets.so
+
+# Copy control file
+COPY --from=builder /tmp/pg_facets/pg_facets.control /usr/share/postgresql/$PG_MAJOR/extension/pg_facets.control
+
+# Copy all SQL scripts (install + upgrade paths)
+COPY --from=builder /tmp/pg_facets/sql/pg_facets--*.sql /usr/share/postgresql/$PG_MAJOR/extension/
+
+# Verify files were copied correctly
+RUN test -f /usr/share/postgresql/$PG_MAJOR/extension/pg_facets.control && \
+    test -f /usr/share/postgresql/$PG_MAJOR/extension/pg_facets--0.4.0.sql && \
+    test -f /usr/lib/postgresql/$PG_MAJOR/lib/pg_facets.so && \
+    echo "pg_facets extension files verified in final image"
+
+# Copy PostgreSQL configuration and init scripts (from this extension folder)
+# IMPORTANT: do NOT write into $PGDATA at build time (it breaks initdb).
+RUN mkdir -p /etc/postgresql
+COPY docker/config/postgresql.conf /etc/postgresql/postgresql.conf
+COPY docker/init/01-init-postgres.sql /docker-entrypoint-initdb.d/
+COPY --chmod=755 docker/init/02-init-template1.sh /docker-entrypoint-initdb.d/
+
+# Expose PostgreSQL port
+EXPOSE 5432
+
+# Default command
+CMD ["postgres","-c","config_file=/etc/postgresql/postgresql.conf"]

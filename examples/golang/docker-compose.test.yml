@@ -1,0 +1,32 @@
+# Test-specific docker-compose that builds and runs pg_facets for testing
+services:
+  pg_facets_test:
+    build:
+      context: ../..
+      dockerfile: examples/golang/Dockerfile.test
+    container_name: pg_facets_test
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+      # Enable NOTICE and LOG level messages for debugging
+      - POSTGRES_INITDB_ARGS=-c log_min_messages=notice -c client_min_messages=notice
+    command: >
+      postgres
+      -c log_destination=stderr
+      -c logging_collector=off
+      -c log_min_messages=notice
+      -c client_min_messages=notice
+      -c log_statement=all
+      -c log_duration=on
+      -c log_error_verbosity=verbose
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    # Don't persist data - tests should start fresh
+    tmpfs:
+      - /var/lib/postgresql/data

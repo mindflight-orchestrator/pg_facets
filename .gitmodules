@@ -1,0 +1,4 @@
+[submodule "deps/pg_roaringbitmap"]
+	path = deps/pg_roaringbitmap
+	url = https://github.com/ChenHuajun/pg_roaringbitmap.git
+

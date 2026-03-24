@@ -1,0 +1,14 @@
+{
+  "name": "@mindflight/pg_facets",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Standalone scaffold for pg_facets extension build/test workflows.",
+  "scripts": {
+    "build": "make build",
+    "test": "make test",
+    "test:integration": "make test-integration",
+    "docker:build:prod": "make docker-build-prod",
+    "docker:build:test": "make docker-build-test",
+    "clean": "make clean"
+  }
+}
