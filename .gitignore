@@ -6,3 +6,6 @@ logs/
 *.log
 .DS_Store
 examples/golang/vendor/
+
+# IMDb dataset (download separately; see data/import.sh)
+data/name.basics.tsv
