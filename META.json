@@ -1,0 +1,52 @@
+{
+  "name": "pg_facets",
+  "abstract": "High-performance faceting using Zig and Roaring Bitmaps with BM25 search",
+  "description": "PostgreSQL extension for faceted search with BM25 full-text search, Roaring Bitmap indexes, multiple facet types, and optional hybrid search with pgvector.",
+  "version": "0.4.3",
+  "maintainer": [
+    "Web Igniter SRL <license@mindflight.be>"
+  ],
+  "license": {
+    "BSL-1.1": "https://mariadb.com/bsl11/"
+  },
+  "prereqs": {
+    "runtime": {
+      "requires": {
+        "PostgreSQL": "17.0.0",
+        "roaringbitmap": "0"
+      }
+    }
+  },
+  "provides": {
+    "pg_facets": {
+      "abstract": "High-performance faceting using Zig and Roaring Bitmaps with BM25 search",
+      "file": "sql/pg_facets--0.4.3.sql",
+      "docfile": "README.md",
+      "version": "0.4.3"
+    }
+  },
+  "resources": {
+    "homepage": "https://github.com/mindflight-orchestrator/pg_facets",
+    "bugtracker": {
+      "web": "https://github.com/mindflight-orchestrator/pg_facets/issues"
+    },
+    "repository": {
+      "url": "https://github.com/mindflight-orchestrator/pg_facets.git",
+      "web": "https://github.com/mindflight-orchestrator/pg_facets",
+      "type": "git"
+    }
+  },
+  "generated_by": "Hand-written for PGXN",
+  "meta-spec": {
+    "version": "1.0.0",
+    "url": "https://pgxn.org/meta/spec.txt"
+  },
+  "tags": [
+    "faceting",
+    "faceted search",
+    "bm25",
+    "full text search",
+    "roaring bitmap",
+    "zig"
+  ]
+}

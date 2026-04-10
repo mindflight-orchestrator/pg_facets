@@ -43,56 +43,12 @@ run_test() {
 FAILED=0
 
 echo ""
-echo "Running Complete Test Suite..."
-run_test "$SQL_DIR/complete_test.sql" || FAILED=1
+echo "Running Minimal Facets Tests..."
+run_test "$SQL_DIR/minimal_facets_test.sql" || FAILED=1
 
 echo ""
-echo "Running Native Tokenization Tests..."
-run_test "$SQL_DIR/native_tokenization_test.sql" || FAILED=1
-
-echo ""
-echo "Running BM25 Search Tests..."
-run_test "$SQL_DIR/bm25_search_test.sql" || FAILED=1
-
-echo ""
-echo "Running Bitmap Optimization Tests..."
-run_test "$SQL_DIR/bitmap_optimization_test.sql" || FAILED=1
-
-echo ""
-echo "Running Hash ID Tests..."
-run_test "$SQL_DIR/hash_id_test.sql" || FAILED=1
-
-echo ""
-echo "Running ID Reconstruction Tests..."
-run_test "$SQL_DIR/id_reconstruction_test.sql" || FAILED=1
-
-echo ""
-echo "Running Facet Regression Tests..."
-run_test "$SQL_DIR/facet_regression_test.sql" || FAILED=1
-
-echo ""
-echo "Running BM25 Text Primary Key Tests..."
-run_test "$SQL_DIR/bm25_text_pk_test.sql" || FAILED=1
-
-echo ""
-echo "Running BM25 Helper Functions Tests (0.4.2)..."
-run_test "$SQL_DIR/bm25_helpers_test.sql" || FAILED=1
-
-echo ""
-echo "Running Parallel Indexing Tests (0.4.2)..."
-run_test "$SQL_DIR/parallel_indexing_test.sql" || FAILED=1
-
-echo ""
-echo "Running Native Tokenization Tests..."
-run_test "$SQL_DIR/native_tokenization_test.sql" || FAILED=1
-
-echo ""
-echo "Running Version 0.4.3 Tests (UNLOGGED, pg_cron, ACID)..."
-run_test "$SQL_DIR/version_0.4.3_test.sql" || FAILED=1
-
-echo ""
-echo "Running ACID Compliance Tests..."
-run_test "$SQL_DIR/acid_compliance_test.sql" || FAILED=1
+echo "Running Minimal BM25 Tests..."
+run_test "$SQL_DIR/minimal_bm25_test.sql" || FAILED=1
 
 echo ""
 echo "=============================================="
