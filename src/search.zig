@@ -23,7 +23,7 @@ pub fn search_documents_native(fcinfo: c.FunctionCallInfo) callconv(.c) c.Datum 
 
     if (!utils.is_arg_null(fcinfo, 1)) {
         const datum = utils.get_arg_datum(fcinfo, 1);
-        const filters_array = @as(*c.ArrayType, @ptrCast(@alignCast(c.DatumGetPointer(datum))));
+        const filters_array = @as(*c.ArrayType, @ptrCast(@alignCast(utils.detoast_datum(datum))));
         var parsed = filters.parse_filters(allocator, filters_array) catch |err| {
             if (err == error.OutOfMemory) utils.elog(c.ERROR, "OutOfMemory");
             return c.PointerGetDatum(null);

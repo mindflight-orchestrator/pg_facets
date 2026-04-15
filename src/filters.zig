@@ -91,7 +91,7 @@ pub fn build_filter_bitmap_native(fcinfo: c.FunctionCallInfo) callconv(.c) c.Dat
     }
 
     const datum = utils.get_arg_datum(fcinfo, 1);
-    const filters_array = @as(*c.ArrayType, @ptrCast(@alignCast(c.DatumGetPointer(datum))));
+    const filters_array = @as(*c.ArrayType, @ptrCast(@alignCast(utils.detoast_datum(datum))));
 
     var parsed_filters = parse_filters(allocator, filters_array) catch |err| {
         if (err == error.OutOfMemory) utils.elog(c.ERROR, "OutOfMemory");
