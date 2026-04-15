@@ -108,11 +108,18 @@ pub fn build(b: *std.Build) void {
 
     // Add memory safety tests
     const memory_safety_mod = b.createModule(.{
-        .root_source_file = b.path("src/bm25/memory_safety_test.zig"),
+        .root_source_file = b.path("src/memory_safety_test_root.zig"),
         .target = target,
         .optimize = optimize,
         .link_libc = true,
     });
+    memory_safety_mod.addSystemIncludePath(.{ .cwd_relative = pg_server_include });
+    memory_safety_mod.addSystemIncludePath(.{ .cwd_relative = "/usr/include/postgresql/16/server" });
+    memory_safety_mod.addSystemIncludePath(.{ .cwd_relative = "/usr/include/postgresql/17/server" });
+    memory_safety_mod.addSystemIncludePath(.{ .cwd_relative = "/opt/homebrew/opt/postgresql@17/include/server" });
+    memory_safety_mod.addSystemIncludePath(.{ .cwd_relative = "/usr/local/opt/postgresql@17/include/server" });
+    memory_safety_mod.addSystemIncludePath(.{ .cwd_relative = "../../.pg_install/include/server" });
+    memory_safety_mod.addIncludePath(.{ .cwd_relative = "deps/pg_roaringbitmap" });
     const memory_safety_tests = b.addTest(.{
         .root_module = memory_safety_mod,
     });
